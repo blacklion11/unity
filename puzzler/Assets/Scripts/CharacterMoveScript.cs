@@ -6,8 +6,9 @@ public class CharacterMoveScript : MonoBehaviour {
 
 	public float player_move_speed;
 	
-	public bool facingLeft;
-	public bool jumping;
+	private bool facingLeft;
+	private bool jumping;
+	private bool grounded;
 
 
 	// Use this for initialization
@@ -34,6 +35,35 @@ public class CharacterMoveScript : MonoBehaviour {
 			Transform trans = GetComponent<Transform>();
 			trans.position = new Vector2(trans.position.x + player_move_speed, trans.position.y);
 		}
+		if (Input.GetKey ("space"))
+		{
+			Jump ();
+		}
 
 	}
+
+	void Jump()
+	{
+		grounded = true;
+		if (grounded)
+		{
+			Rigidbody2D rb = GetComponent<Rigidbody2D>();
+			rb.AddForce( new Vector2(0, 100));
+		}
+	}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 }
