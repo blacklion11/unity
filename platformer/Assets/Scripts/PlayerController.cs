@@ -20,7 +20,9 @@ public class PlayerController : MonoBehaviour {
 	
 	// Update is called once per frame
 	void Update () {
-	
+
+		GetComponent<Transform>().Rotate(Vector3.back * 5);
+
 	}
 
 	void FixedUpdate()
