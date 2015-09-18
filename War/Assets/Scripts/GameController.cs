@@ -18,9 +18,13 @@ public class GameController : MonoBehaviour {
 	private static int NROWS = 6;
 	private AudioSource audioSource;
 
+	public int maxTurns;
+	private int turns;
+
 	void Awake() {
 		S = this;
 		audioSource = GetComponent<AudioSource>();
+		turns = 0;
 	}
 
 	void Start() {
@@ -64,55 +68,79 @@ public class GameController : MonoBehaviour {
 
 	public IEnumerator OnFlip(CardController card) {
 
-		if (cardA == null) {
+		if (cardA == null && card.transform.position.x == -3) {
 			cardA = card;
 			cardA.transform.position = new Vector2(cardA.transform.position.x / 2, 0);
 			yield return StartCoroutine (card.SetVisible (true));
 			//audioSource.PlayOneShot (flipSound, 1.0f);
-		} else if (cardB == null && card.GetComponent<Transform>().position.x != cardA.transform.position.x * 2) {
+
+		} else if (cardB == null && card.transform.position.x == 3) {
 			cardB = card;
 			cardB.transform.position = new Vector2(cardB.transform.position.x / 2, 0);
 			yield return StartCoroutine (card.SetVisible (true));
 			//audioSource.PlayOneShot (flipSound, 1.0f);
-		
-
+		}
+		if(cardA != null && cardB != null)
+		{
 			if (cardA.GetWorth() > cardB.GetWorth()) {
-				if (cardA.transform.position.x < 0) {
-					// deck 1
-					deck2.Remove(cardB.gameObject);
-					deck1.Remove(cardA.gameObject);
-					deck1.Add (cardB.gameObject);
-					deck1.Add (cardA.gameObject);
-				} else {
-					// deck 2
-					deck1.Remove(cardB.gameObject);
-					deck2.Remove(cardA.gameObject);
-					deck2.Add (cardB.gameObject);
-					deck2.Add (cardA.gameObject);
-				}
+				//Debug.Log("Deck 2 card is at " + deck2.IndexOf(cardB.gameObject));
+				//deck2.Remove(cardB.gameObject);
+				//deck1.Remove(cardA.gameObject);
+				deck2.RemoveAt(0);
+				deck1.RemoveAt(0);
+				deck1.Add (cardB.gameObject);
+				deck1.Add (cardA.gameObject);
 			} else if (cardA.GetWorth() < cardB.GetWorth()) {
-				if (cardB.transform.position.x < 0) {
-					// deck 1
-					deck2.Remove(cardA.gameObject);
-					deck1.Remove(cardB.gameObject);
+				deck2.RemoveAt(0);
+				deck1.RemoveAt(0);
+				deck2.Add (cardB.gameObject);
+				deck2.Add (cardA.gameObject);
+			} else {
+				if(cardA.GetWorth() % 2 == 0)
+				{
+					// player 1 wins by chance :D
+					deck2.Remove(cardB.gameObject);
+					deck1.Remove(cardA.gameObject);
 					deck1.Add (cardB.gameObject);
 					deck1.Add (cardA.gameObject);
-				} else {
-					// deck 2
-					deck1.Remove(cardA.gameObject);
+				}else
+				{
+					// player 2 wins by slightly better chances..
 					deck2.Remove(cardB.gameObject);
+					deck1.Remove(cardA.gameObject);
 					deck2.Add (cardB.gameObject);
 					deck2.Add (cardA.gameObject);
 				}
-			} else {
-			
 			}
 
 
-			Debug.Log (deck1.Count);
-			Debug.Log (deck2.Count);
+			Debug.Log (deck1.Count + " - From Deck 1");
+			Debug.Log (deck2.Count + " - From Deck 2");
 
 		    cardA = cardB = null;
 		}
+
+		if(deck1.Count == 0 || deck2.Count == 0 || turns > maxTurns)
+		{
+			if(deck1.Count > deck2.Count)
+			{
+				Win (1);
+			}
+			else
+			{
+				Win (2);
+			}
+
+		}
+
+		turns++;
+	}
+
+	public void Win(int player)
+	{
+		String message = "Congrats Player " + player + " , YOU WIN!!!!!";
+
+		Debug.Log(message);
+
 	}
 }

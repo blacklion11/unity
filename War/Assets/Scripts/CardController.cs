@@ -50,7 +50,7 @@ public class CardController : MonoBehaviour {
     } else {*/
       GetComponent<SpriteRenderer>().sprite = isVisible ? selfSprite : backSprite;
     //}
-		yield return new WaitForSeconds (1);
+		yield return new WaitForSeconds (0);
   }
 
   public int GetWorth() {

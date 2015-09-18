@@ -9,6 +9,8 @@ GameObject:
   m_Component:
   - 4: {fileID: 494898}
   - 212: {fileID: 21297274}
+  - 114: {fileID: 11499916}
+  - 61: {fileID: 6107020}
   m_Layer: 0
   m_Name: red
   m_TagString: Untagged
@@ -28,6 +30,30 @@ Transform:
   m_Children: []
   m_Father: {fileID: 0}
   m_RootOrder: 0
+--- !u!61 &6107020
+BoxCollider2D:
+  m_ObjectHideFlags: 1
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 171576}
+  m_Enabled: 1
+  m_Material: {fileID: 0}
+  m_IsTrigger: 0
+  m_UsedByEffector: 0
+  m_Offset: {x: 0, y: 0}
+  serializedVersion: 2
+  m_Size: {x: 1, y: 1}
+--- !u!114 &11499916
+MonoBehaviour:
+  m_ObjectHideFlags: 1
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 171576}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: e59b6b553fb6dcd4fb68a79473b5df90, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!212 &21297274
 SpriteRenderer:
   m_ObjectHideFlags: 1
