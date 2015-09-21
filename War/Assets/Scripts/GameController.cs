@@ -5,8 +5,8 @@ using System.Collections.Generic;
 
 public class GameController : MonoBehaviour {
 	public static GameController S;
+
 	public AudioClip successSound;
-	public AudioClip failureSound;
 	public AudioClip flipSound;
 
 	public GameObject[] cards;
@@ -72,13 +72,13 @@ public class GameController : MonoBehaviour {
 			cardA = card;
 			cardA.transform.position = new Vector2(cardA.transform.position.x / 2, 0);
 			yield return StartCoroutine (card.SetVisible (true));
-			//audioSource.PlayOneShot (flipSound, 1.0f);
+			audioSource.PlayOneShot (flipSound, 1.0f);
 
 		} else if (cardB == null && card.transform.position.x == 3) {
 			cardB = card;
 			cardB.transform.position = new Vector2(cardB.transform.position.x / 2, 0);
 			yield return StartCoroutine (card.SetVisible (true));
-			//audioSource.PlayOneShot (flipSound, 1.0f);
+			audioSource.PlayOneShot (flipSound, 1.0f);
 		}
 		if(cardA != null && cardB != null)
 		{
@@ -111,12 +111,19 @@ public class GameController : MonoBehaviour {
 					deck2.Add (cardB.gameObject);
 					deck2.Add (cardA.gameObject);
 				}
+
+
 			}
 
+			yield return new WaitForSeconds(1);
+
+			cardA.GetComponent<SpriteRenderer>().enabled = false;
+			cardB.GetComponent<SpriteRenderer>().enabled = false;
 
 			Debug.Log (deck1.Count + " - From Deck 1");
 			Debug.Log (deck2.Count + " - From Deck 2");
 
+			turns++;
 		    cardA = cardB = null;
 		}
 
@@ -131,9 +138,10 @@ public class GameController : MonoBehaviour {
 				Win (2);
 			}
 
+			audioSource.PlayOneShot (successSound, 1.0f);
 		}
 
-		turns++;
+
 	}
 
 	public void Win(int player)
