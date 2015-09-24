@@ -3,11 +3,11 @@ using System.Collections;
 
 
 public class GameController : MonoBehaviour {
+	public static GameController S;
 
 	public GameObject container;
 
 	public GameObject blue;
-	public GameObject black;
 	public GameObject brown;
 	public GameObject green;
 	public GameObject light_blue;
@@ -19,6 +19,7 @@ public class GameController : MonoBehaviour {
 
 	// Use this for initialization
 	void Start () {
+		S = this;
 	
 		// Construct the container bottom
 		for(int i = 0; i < 10; i++)
@@ -54,6 +55,35 @@ public class GameController : MonoBehaviour {
 	
 	}
 
+	private BlockController blockA;
+	private BlockController blockB;
+
+	public IEnumerator SelectBlock(BlockController block)
+	{
+		if(blockA == null)
+		{
+			blockA = block;
+
+			yield return StartCoroutine(block.Select(true));
+		}
+		else if(blockB == null && isNeighbor(blockA.transform, block.transform))
+		{
+			blockB = block;
+
+
+			yield return StartCoroutine(block.Select(true));
+		}
+
+		yield return new WaitForSeconds (0);
+
+	}
+
+	bool isNeighbor(Transform transA, Transform transB)
+	{
+		return Mathf.Abs(transA.position.x - transB.position.x) <= 1 && Mathf.Abs(transA.position.y - transB.position.y) <= 1; 
+
+	}
+
 	void GenerateBlocks()
 	{
 		//Randomly generate the blocks
@@ -62,7 +92,7 @@ public class GameController : MonoBehaviour {
 			int[] line = new int[8];
 			for(int j = 0; j < 8; j++)
 			{
-				int rand = (int) Random.Range(0f, 6f);
+				int rand = (int) Random.Range(0f, 4f);
 				line[j] = rand;
 			}
 			int_blocks.Add(line);
@@ -86,18 +116,15 @@ public class GameController : MonoBehaviour {
 					go = Instantiate(blue) as GameObject;
 					break;
 				case 1:
-					go = Instantiate(black) as GameObject;
-					break;
-				case 2:
 					go =Instantiate(brown) as GameObject;
 					break;
-				case 3:
+				case 2:
 					go = Instantiate(green) as GameObject;
 					break;
-				case 4:
+				case 3:
 					go = Instantiate(light_blue) as GameObject;
 					break;
-				case 5:
+				case 4:
 					go = Instantiate(red) as GameObject;
 					break;
 				}

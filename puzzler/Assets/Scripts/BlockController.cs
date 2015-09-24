@@ -1,10 +1,13 @@
-﻿using UnityEngine;
+﻿ using UnityEngine;
 using System.Collections;
 
 public class BlockController : MonoBehaviour {
-
+	//public static GameController S;
 
 	private Transform trans;
+	private SpriteRenderer renderer;
+	private Color selectColor;
+	private bool isSelected;
 
 	private Vector2 oldPos;
 	private Vector2 mousePos;
@@ -13,6 +16,13 @@ public class BlockController : MonoBehaviour {
 	void Start () {
 
 		trans = GetComponent<Transform> ();
+		renderer = GetComponent<SpriteRenderer>();
+
+		selectColor = new Color();
+		selectColor.r = 0.25f;
+		selectColor.g = 0.25f;
+		selectColor.b = 0.25f;
+		selectColor.a = 1f;
 	}
 	
 	// Update is called once per frame
@@ -24,41 +34,42 @@ public class BlockController : MonoBehaviour {
 	void OnMouseDown()
 	{
 
-		// Get Mouse Coords
-		mousePos = new Vector2(Input.mousePosition.x, Input.mousePosition.y);
-
-		// Pick up block
-
+		// Highlight block
+		//renderer.color = selectColor;
 	}
 
 	void OnMouseDrag()
 	{
 
-		// Drag the block
-		Vector2 pos = new Vector2 (Input.mousePosition.x, Input.mousePosition.y);
-
-		// divide delta by 32 to get pixels (not units)
-		float deltaX = (pos.x - mousePos.x) / 32;
-		float deltaY = (pos.y - mousePos.y) / 32;
-
-		if(deltaX != 0 || deltaY != 0)
-		{
-		
-			trans.position = new Vector2(trans.position.x + deltaX, trans.position.y + deltaY);
-			mousePos = pos;
-		}
 	}
 
 	void OnMouseUp()
 	{
-		// Check where the block was dropped
-		float dropPosX = trans.position.x;
-		float dropPosY = trans.position.y;
+		if (!isSelected) {
+			StartCoroutine(GameController.S.SelectBlock(this));
+		}
+	}
 
-		int tileX = (int) dropPosX / 32;
-		int tileY = (int) dropPosY / 32;
+	public IEnumerator Select(bool val)
+	{
+		if(val)
+		{
+			renderer.color = selectColor;
+		}
+		else
+		{
+			renderer.color = Color.white;
+		}
 
-		Debug.Log(dropPosX + ", " + dropPosY);
-
+		yield return new WaitForSeconds(0);
 	}
 }
+
+
+
+
+
+
+
+
+

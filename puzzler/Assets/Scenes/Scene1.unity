@@ -187,7 +187,6 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   container: {fileID: 167426, guid: 17dfb70fad41a214b800bc1d6da61848, type: 2}
   blue: {fileID: 122588, guid: 40f504c2031b6cc4387defd59e48c720, type: 2}
-  black: {fileID: 173974, guid: f0f2d1e857a4b6b4cbb50663e88cbff5, type: 2}
   brown: {fileID: 192166, guid: c6065b8697715ee43a28909d35ef23f1, type: 2}
   green: {fileID: 176922, guid: c1bbaae079ab0c3439591859592bfb35, type: 2}
   light_blue: {fileID: 187298, guid: 800abb3e324c12e4895e010338a4182a, type: 2}
