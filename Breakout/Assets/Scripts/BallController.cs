@@ -10,11 +10,15 @@ public class BallController : MonoBehaviour {
 	// Use this for initialization
 	void Start () {
 		ball = GetComponent<Rigidbody2D> ();
-		float dirx = Random.Range (-3, 3);
+		float dirx = 0;
+		while(Mathf.Abs(dirx) < 1)
+		{
+			dirx = Random.Range (-3, 3);
+		}
 		float diry = Random.Range (1, 3);
 		ball.velocity = new Vector2 (speed * dirx, speed * diry);
 	}
-	
+
 	// Update is called once per frame
 	void Update () {
 	
