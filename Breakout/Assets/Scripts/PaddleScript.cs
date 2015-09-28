@@ -2,6 +2,7 @@
 using System.Collections;
 
 public class PaddleScript : MonoBehaviour {
+ 
 
 	public float speed;
 	private Rigidbody2D paddle;
