@@ -191,3 +191,5 @@ MonoBehaviour:
   green: {fileID: 176922, guid: c1bbaae079ab0c3439591859592bfb35, type: 2}
   light_blue: {fileID: 187298, guid: 800abb3e324c12e4895e010338a4182a, type: 2}
   red: {fileID: 171576, guid: 0efeaa838b400764ea50974f1173cddd, type: 2}
+  width: 8
+  height: 20

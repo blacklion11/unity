@@ -13,6 +13,9 @@ public class GameController : MonoBehaviour {
 	public GameObject light_blue;
 	public GameObject red;
 
+	public int width;
+	public int height;
+
 	private ArrayList int_blocks;
 	private ArrayList blocks;
 
@@ -22,7 +25,7 @@ public class GameController : MonoBehaviour {
 		S = this;
 	
 		// Construct the container bottom
-		for(int i = 0; i < 10; i++)
+		for(int i = 0; i < width + 2; i++)
 		{
 			GameObject go = Instantiate(container) as GameObject;
 			go.transform.position = new Vector2(i, 0);
@@ -30,9 +33,9 @@ public class GameController : MonoBehaviour {
 
 		// Construct the container walls
 
-		for(int i = 0; i < 20; i++)
+		for(int i = 0; i < height + 1; i++)
 		{
-			for(int j = 0; j < 10; j+=9)
+			for(int j = 0; j < width + 2; j+= (width + 1))
 			{
 				GameObject go = Instantiate(container) as GameObject;
 				go.transform.position = new Vector2(j, i);
@@ -112,16 +115,21 @@ public class GameController : MonoBehaviour {
 
 	void shiftBlocks()
 	{
+		Vector2 startPos = new Vector2(1f,1f);
+
 
 	}
 
 
 	void removeGroup()
 	{
+		Vector2 startPos = blockA.transform.position;
+		startPos.y++;
 
-		RaycastHit2D rayhit = Physics2D.Raycast(blockA.transform.position, Vector2.up);
+		RaycastHit2D rayhit = Physics2D.Raycast(startPos, Vector2.up);
 
 		Debug.Log(rayhit.distance);
+		Debug.Log(rayhit.transform.gameObject.GetComponent<BlockController>().Color_ID);
 		if(rayhit.collider.gameObject.GetComponent<BlockController>().Color_ID == blockA.Color_ID) Destroy(rayhit.collider.gameObject);
 	}
 
@@ -172,10 +180,10 @@ public class GameController : MonoBehaviour {
 	void GenerateBlocks()
 	{
 		//Randomly generate the blocks
-		for(int i = 0; i < 19; i++)
+		for(int i = 0; i < height; i++)
 		{
-			int[] line = new int[8];
-			for(int j = 0; j < 8; j++)
+			int[] line = new int[width];
+			for(int j = 0; j < width; j++)
 			{
 				int rand = (int) Random.Range(0f, 80);
 				line[j] = rand;
@@ -187,11 +195,11 @@ public class GameController : MonoBehaviour {
 	void SpawnBlocks()
 	{
 		//Spawn the blocks 
-		for(int i = 1; i < 20; i++)
+		for(int i = 1; i < height; i++)
 		{
 			int[] int_line = (int[]) int_blocks[i - 1];
-			GameObject[] ob_line = new GameObject[8];
-			for(int j = 1; j < 9; j++)
+			GameObject[] ob_line = new GameObject[width];
+			for(int j = 1; j < width + 1; j++)
 			{
 				int block_id = int_line[j - 1];
 				GameObject go = null;
