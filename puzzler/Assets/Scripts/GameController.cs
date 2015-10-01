@@ -29,7 +29,9 @@ public class GameController : MonoBehaviour {
 		{
 			GameObject go = Instantiate(container) as GameObject;
 			go.transform.position = new Vector2(i, 0);
-		}
+            go.GetComponent<BlockController>().container = true;
+            go.GetComponent<BlockController>().Color_ID = -1;
+        }
 
 		// Construct the container walls
 
@@ -39,8 +41,10 @@ public class GameController : MonoBehaviour {
 			{
 				GameObject go = Instantiate(container) as GameObject;
 				go.transform.position = new Vector2(j, i);
+                go.GetComponent<BlockController>().container = true;
+                go.GetComponent<BlockController>().Color_ID = -1;
 
-			}
+            }
 
 		}
 
@@ -94,7 +98,7 @@ public class GameController : MonoBehaviour {
 				yield return StartCoroutine(blockB.Select(false));
 
 				// Check for groups to remove
-				removeGroup();
+				removeGroup(blockA.transform, blockA.transform, 1);
 
 
 				// shift blocks after removing groups
@@ -115,66 +119,158 @@ public class GameController : MonoBehaviour {
 
 	void shiftBlocks()
 	{
-		Vector2 startPos = new Vector2(1f,1f);
+        Vector2 originPos = new Vector2(1f, 1f);
+        Vector2 startPos = new Vector2(1f, 1f);
 
+
+        for (int i = 0; i < height; i++)
+        {
+            for (int j = 0; j < width; j++)
+            {
+
+                RaycastHit2D rayhit = Physics2D.Raycast(startPos, Vector2.up);
+
+                if (rayhit.distance > 0)
+                {
+                    // a gap is found
+                    Debug.Log("Gap");
+                    rayhit.transform.position = new Vector2(rayhit.transform.position.x, rayhit.transform.position.y - (rayhit.distance * 2));
+                }
+
+                startPos = new Vector2(originPos.x + j, originPos.y + i);
+            }
+        }
 
 	}
 
 
-	void removeGroup()
+	bool removeGroup(Transform test, Transform origin, int counter)
 	{
-		Vector2 startPos = blockA.transform.position;
-		startPos.y++;
+        Vector2 startPos = test.transform.position;
+        bool shouldDestroy = false;
+        /*
 
-		RaycastHit2D rayhit = Physics2D.Raycast(startPos, Vector2.up);
+        // find which direction we came from
+        // 0 = left, 1 = up, 2 = right, 3 = down
+        int origin_dir = -1;
+        if (origin.position.x > startPos.x && origin.position.y == startPos.y)
+        {
+            // origin on right
+            origin_dir = 2;
+        }
+        if (origin.position.x < startPos.x && origin.position.y == startPos.y)
+        {
+            // origin on left
+            origin_dir = 0;
+        }
+        if (origin.position.x == startPos.x && origin.position.y < startPos.y)
+        {
+            // origin on bottom
+            origin_dir = 3;
+        }
+        if (origin.position.x == startPos.x && origin.position.y > startPos.y)
+        {
+            // origin on top
+            origin_dir = 1;
+        }
+        */
 
-		Debug.Log(rayhit.distance);
-		Debug.Log(rayhit.transform.gameObject.GetComponent<BlockController>().Color_ID);
-		if(rayhit.collider.gameObject.GetComponent<BlockController>().Color_ID == blockA.Color_ID) Destroy(rayhit.collider.gameObject);
-	}
+        RaycastHit2D rayhit;
 
+        // test left
+        /*
+        if (origin_dir != 0)
+        {
+            rayhit = Physics2D.Raycast(new Vector2(startPos.x - 1, startPos.y), Vector2.left);
+            if (rayhit.transform.gameObject.GetComponent<BlockController>().Color_ID == test.GetComponent<BlockController>().Color_ID)
+            {
+                counter++;
+                shouldDestroy = removeGroup(rayhit.transform, test, counter);
+            }
+        }
 
-	/*
-	bool walkBlocks(BlockController block, int counter)
-	{
-		int numLikeBlocks = 0;
-		bool shouldDestroy = false;
-		// walk through all touching blocks and see if they are the same color
-		for(int i = -1; i < 2; i++)
-		{
-			for(int j = -1; j < 2; j++)
-			{
-				if(i == 0 && j == 0)continue;
+        // test up
+        if (origin_dir != 1)
+        {
+            rayhit = Physics2D.Raycast(new Vector2(startPos.x, startPos.y + 1), Vector2.up);
+            if (rayhit.transform.gameObject.GetComponent<BlockController>().Color_ID == test.GetComponent<BlockController>().Color_ID)
+            {
+                counter++;
+                shouldDestroy = removeGroup(rayhit.transform, test, counter);
+            }
+        }
+        // test right
+        if (origin_dir != 2)
+        {
+            rayhit = Physics2D.Raycast(new Vector2(startPos.x + 1, startPos.y), Vector2.right);
+            if (rayhit.transform.gameObject.GetComponent<BlockController>().Color_ID == test.GetComponent<BlockController>().Color_ID)
+            {
+                counter++;
+                shouldDestroy = removeGroup(rayhit.transform, test, counter);
+            }
 
-				Debug.Log(block.transform.position);
+        }
+        if (origin_dir != 3)
+        {
+            // test down
+            rayhit = Physics2D.Raycast(new Vector2(startPos.x, startPos.y - 1), Vector2.down);
+            if (rayhit.transform.gameObject.GetComponent<BlockController>().Color_ID == test.GetComponent<BlockController>().Color_ID)
+            {
+                counter++;
+                shouldDestroy = removeGroup(rayhit.transform, test, counter);
+            }
+        }
+        */
 
-				GameObject testBlock =  ( (GameObject[]) blocks[(int) (block.transform.position.y) + i])[((int) block.transform.position.x) + j];
-				if(!testBlock.GetComponent<BlockController>().counted && testBlock.GetComponent<BlockController>().Color_ID == block.Color_ID)
-				{
-					// match found
-					testBlock.GetComponent<BlockController>().counted = true;
-					numLikeBlocks++;
+        // test left
+        rayhit = Physics2D.Raycast(new Vector2(startPos.x - 1, startPos.y), Vector2.left);
+        Debug.Log("rayhit location: " + rayhit.transform.position);
+        if (rayhit.transform.gameObject.GetComponent<BlockController>().Color_ID == test.GetComponent<BlockController>().Color_ID && !rayhit.transform.gameObject.GetComponent<BlockController>().counted)
+        {
+            rayhit.transform.gameObject.GetComponent<BlockController>().counted = true;
+            counter++;
+            shouldDestroy = removeGroup(rayhit.transform, test, counter);
+        }
+       
 
-					// test the test block for like colored blocks
-					shouldDestroy = walkBlocks(testBlock.GetComponent<BlockController>(), counter + numLikeBlocks);
-				}
-			}
-		}
+        // test up
+      
+        rayhit = Physics2D.Raycast(new Vector2(startPos.x, startPos.y + 1), Vector2.up);
+        if (rayhit.transform.gameObject.GetComponent<BlockController>().Color_ID == test.GetComponent<BlockController>().Color_ID && !rayhit.transform.gameObject.GetComponent<BlockController>().counted)
+        {
+            rayhit.transform.gameObject.GetComponent<BlockController>().counted = true;
+            counter++;
+            shouldDestroy = removeGroup(rayhit.transform, test, counter);
+        }
+        
+        // test right
+      
+        rayhit = Physics2D.Raycast(new Vector2(startPos.x + 1, startPos.y), Vector2.right);
+        if (rayhit.transform.gameObject.GetComponent<BlockController>().Color_ID == test.GetComponent<BlockController>().Color_ID && !rayhit.transform.gameObject.GetComponent<BlockController>().counted)
+        {
+            rayhit.transform.gameObject.GetComponent<BlockController>().counted = true;
+            counter++;
+            shouldDestroy = removeGroup(rayhit.transform, test, counter);
+        }
+       
+        // test down
+            rayhit = Physics2D.Raycast(new Vector2(startPos.x, startPos.y - 1), Vector2.down);
+        if (rayhit.transform.gameObject.GetComponent<BlockController>().Color_ID == test.GetComponent<BlockController>().Color_ID && !rayhit.transform.gameObject.GetComponent<BlockController>().counted)
+        {
+            rayhit.transform.gameObject.GetComponent<BlockController>().counted = true;
+            counter++;
+            shouldDestroy = removeGroup(rayhit.transform, test, counter);
 
-		// if no blocks are the same color check counter for number of touching same-colored blocks
-		if(counter + numLikeBlocks > 3)
-		{
-			shouldDestroy = true;
-		}
+        }
 
-		if(shouldDestroy)
-		{
-			Destroy(block.gameObject);
-		}
-		return shouldDestroy;
-	}
-	*/
+            if (counter > 2 || shouldDestroy)
+        {
+            shouldDestroy = true;
+            Destroy(test.gameObject);
+        }
 
+        return shouldDestroy;
+    }
 
 
 	void GenerateBlocks()

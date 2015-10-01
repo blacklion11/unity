@@ -8,6 +8,7 @@ public class BlockController : MonoBehaviour {
 	private Color selectColor;
 	private Color deselectColor;
 	private bool isSelected;
+    public bool container;
 
 	private Vector2 oldPos;
 	private Vector2 mousePos;
@@ -55,13 +56,17 @@ public class BlockController : MonoBehaviour {
 
 	void OnMouseUp()
 	{
-		if (!isSelected) {
-			StartCoroutine(GameController.S.SelectBlock(this, true));
-		}
-		else
-		{
-			StartCoroutine(GameController.S.SelectBlock(this,false));
-		}
+        if (!container)
+        {
+            if (!isSelected)
+            {
+                StartCoroutine(GameController.S.SelectBlock(this, true));
+            }
+            else
+            {
+                StartCoroutine(GameController.S.SelectBlock(this, false));
+            }
+        }
 	}
 
 	public IEnumerator Select(bool val)
