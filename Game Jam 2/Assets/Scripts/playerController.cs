@@ -4,7 +4,7 @@ using System.Collections;
 public class playerController : MonoBehaviour {
 	Rigidbody2D rb;
 	public float speed;
-	public gameControlller gc;
+	public gameController gc;
 	// Use this for initialization
 	void Start () {
 		rb = GetComponent<Rigidbody2D>();
@@ -13,7 +13,7 @@ public class playerController : MonoBehaviour {
 	// Update is called once per frame
 	void Update () {
 		float direction = Input.GetAxis("Vertical");
-		rb.velocity = new Vector2(0,speed * direction);
+		rb.velocity = new Vector2(0,speed * Input.acceleration.y);
 	}
 	
 	void OnTriggerEnter2D(Collider2D other){
