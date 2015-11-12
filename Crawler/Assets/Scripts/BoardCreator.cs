@@ -27,6 +27,7 @@ public class BoardCreator : MonoBehaviour
     private GameObject boardHolder;                           // GameObject that acts as a container for all other tiles.
 
     public CameraController camcon;
+	public MobController mobcon;
 
     private void Start()
     {
@@ -86,6 +87,11 @@ public class BoardCreator : MonoBehaviour
             // Setup the room based on the previous corridor.
             rooms[i].SetupRoom(roomWidth, roomHeight, columns, rows, corridors[i - 1]);
 
+			// Spawn mobs in said room
+			mobcon.SpawnMob(0, rooms[i].xPos + 1, rooms[i].yPos + 1);
+			mobcon.SpawnMob(0, rooms[i].xPos + rooms[i].roomWidth - 2, rooms[i].yPos);
+			mobcon.SpawnMob(0, rooms[i].xPos, rooms[i].yPos + rooms[i].roomHeight - 2);
+			
             // If we haven't reached the end of the corridors array...
             if (i < corridors.Length)
             {

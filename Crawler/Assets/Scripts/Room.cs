@@ -1,4 +1,5 @@
 ﻿using UnityEngine;
+using System.Collections;
 
 public class Room
 {
@@ -7,7 +8,6 @@ public class Room
     public int roomWidth;                     // How many tiles wide the room is.
     public int roomHeight;                    // How many tiles high the room is.
     public Direction enteringCorridor;    // The direction of the corridor that is entering this room.
-
 
     // This is used for the first room.  It does not have a Corridor parameter since there are no corridors yet.
     public void SetupRoom(IntRange widthRange, IntRange heightRange, int columns, int rows)
@@ -69,7 +69,7 @@ public class Room
                 xPos = corridor.EndPositionX - roomWidth + 1;
 
                 yPos = Random.Range(corridor.EndPositionY - roomHeight + 1, corridor.EndPositionY);
-                yPos = Mathf.Clamp(yPos, 0, rows - roomHeight);
+                yPos = Mathf.Clamp(yPos, 0, rows - roomHeight);			
                 break;
         }
     }
