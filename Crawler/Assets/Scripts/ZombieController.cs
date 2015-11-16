@@ -31,8 +31,11 @@ public class ZombieController : MonoBehaviour {
 			int xdir = Random.Range(-1, 1);
 			Vector3 lookdir = new Vector3(0,0,0);
 			transform.rotation = Quaternion.LookRotation(lookdir);*/
-			rb.velocity =new Vector2(0,0);
-			rb.AddForce(new Vector2(100*Random.Range(-1,1),100*Random.Range(-1,1)));
+			rb.velocity = new Vector2(0,0);
+			Vector2 force = new Vector2(100*Random.Range(-1f,1f),100*Random.Range(-1f,1f));
+			//Debug.Log(force);
+			rb.AddForce(force);
+			
 		}else{
 			zombieTimer -= Time.deltaTime;
 		}

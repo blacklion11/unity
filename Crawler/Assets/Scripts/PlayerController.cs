@@ -1,4 +1,5 @@
 ﻿using UnityEngine;
+using UnityEngine.UI;
 using System.Collections;
 
 public class PlayerController : MonoBehaviour {
@@ -17,6 +18,10 @@ public class PlayerController : MonoBehaviour {
 	
 	// Update is called once per frame
 	void Update () {
+		if (health < 1) {
+			Application.LoadLevel("StartScene");
+		}
+
         float dirx = Input.GetAxis("Horizontal");
         float diry = Input.GetAxis("Vertical");
 
@@ -27,6 +32,8 @@ public class PlayerController : MonoBehaviour {
 
     void OnCollisionEnter2D(Collision2D collision)
     {
-        Debug.Log("Collide");
+		if(collision.gameObject.name.Contains("zombie")){
+			health--;
+		}
     }
 }

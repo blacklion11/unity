@@ -1,4 +1,5 @@
 ﻿using UnityEngine;
+using UnityEngine.UI;
 using System.Collections;
 
 public class CameraController : MonoBehaviour {
@@ -7,6 +8,8 @@ public class CameraController : MonoBehaviour {
     private GameObject player;
     public float zoom;
     private Camera camera;
+	public Text text;
+	public GameObject heart;
 
 	// Use this for initialization
 	void Start () {
@@ -25,6 +28,9 @@ public class CameraController : MonoBehaviour {
         {
             this.transform.position = new Vector3(player.transform.position.x, player.transform.position.y, -10);
             camera.orthographicSize = zoom;
+			text.transform.localPosition = new Vector3(Screen.width * .45f,Screen.height * .45f,0);
+			heart.transform.position = new Vector3(text.transform.position.x + 0.3f, text.transform.position.y+0.4f);
         }
+		text.text = player.GetComponent<PlayerController> ().health + "";
 	}
 }
