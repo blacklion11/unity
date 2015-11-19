@@ -1,8 +1,13 @@
 ﻿<Properties>
   <MonoDevelop.Ide.Workspace />
-  <MonoDevelop.Ide.Workbench ActiveDocument="..\arcade\Assets\scripts\GameController.cs">
+  <MonoDevelop.Ide.Workbench ActiveDocument="..\Crawler\Assets\Scripts\CameraController.cs">
     <Files>
-      <File FileName="..\arcade\Assets\scripts\GameController.cs" Line="46" Column="35" />
+      <File FileName="..\Crawler\Assets\Scripts\PlayerController.cs" Line="22" Column="27" />
+      <File FileName="..\Crawler\Assets\Scripts\ZombieController.cs" Line="1" Column="1" />
+      <File FileName="..\Crawler\Assets\Scripts\MobController.cs" Line="1" Column="1" />
+      <File FileName="..\Crawler\Assets\Scripts\CameraController.cs" Line="32" Column="106" />
+      <File FileName="..\Crawler\Assets\Scripts\BoardCreator.cs" Line="1" Column="1" />
+      <File FileName="..\Crawler\Assets\Scripts\Corridor.cs" Line="1" Column="1" />
     </Files>
   </MonoDevelop.Ide.Workbench>
   <MonoDevelop.Ide.DebuggingService.Breakpoints>
