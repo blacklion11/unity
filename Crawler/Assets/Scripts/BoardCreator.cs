@@ -79,18 +79,22 @@ public class BoardCreator : MonoBehaviour
         // Setup the first corridor using the first room.
         corridors[0].SetupCorridor(rooms[0], corridorLength, roomWidth, roomHeight, columns, rows, true);
 
+		Vector3 playerPos = new Vector3(rooms[0].xPos, rooms[0].yPos, 0);
+		GameObject go = Instantiate(player, playerPos, Quaternion.identity) as GameObject;
+		go.name = "player";
+
+		if (go == null) Debug.Log("Null");
+		//assign player to camera
+		camcon.assignPlayer(go);
+		
         for (int i = 1; i < rooms.Length; i++)
         {
+		
             // Create a room.
             rooms[i] = new Room();
 
             // Setup the room based on the previous corridor.
             rooms[i].SetupRoom(roomWidth, roomHeight, columns, rows, corridors[i - 1]);
-
-			// Spawn mobs in said room
-			mobcon.SpawnMob(0, rooms[i].xPos + 1, rooms[i].yPos + 1);
-			mobcon.SpawnMob(0, rooms[i].xPos + rooms[i].roomWidth - 2, rooms[i].yPos);
-			mobcon.SpawnMob(0, rooms[i].xPos, rooms[i].yPos + rooms[i].roomHeight - 2);
 			
             // If we haven't reached the end of the corridors array...
             if (i < corridors.Length)
@@ -98,20 +102,40 @@ public class BoardCreator : MonoBehaviour
                 // ... create a corridor.
                 corridors[i] = new Corridor();
 
+				// if  room y + height + corridorLength.maxLength + roomHeight.maxY > startRoom.y   ** Can't go north
+				//if(rooms[i].yPos + 
+				
+				//(room.yPos < (this.yPos + this.roomHeight) || (room.yPos + room.roomHeight) > (this.yPos))  && ((room.xPos  < this.xPos + this.roomWidth) || room.xPos + room.roomWidth > this.xPos)
+				
                 // Setup the corridor based on the room that was just created.
-                corridors[i].SetupCorridor(rooms[i], corridorLength, roomWidth, roomHeight, columns, rows, false);
+				bool corridorFeasible = true;
+				do
+				{
+					corridors[i].SetupCorridor(rooms[i], corridorLength, roomWidth, roomHeight, columns, rows, false);
+					switch(corridors[i].direction)
+					{
+						case Direction.North:
+							corridorFeasible = ((rooms[i].yPos + rooms[i].roomHeight + corridorLength.m_Max + roomHeight.m_Max < rooms[0].yPos || rooms[0].yPos + rooms[0].roomHeight < rooms[i].yPos) || ((corridors[i].startXPos - roomWidth.m_Max < rooms[0].xPos) || (corridors[i].startXPos + 1 + roomWidth.m_Max > rooms[0].xPos + roomWidth.m_Max)));
+							break;
+						case Direction.South:
+							corridorFeasible = ((rooms[i].yPos - corridorLength.m_Max - roomHeight.m_Max < rooms[0].yPos + rooms[0].roomHeight || rooms[0].yPos > rooms[i].yPos + rooms[i].roomHeight) || ((corridors[i].startXPos - roomWidth.m_Max > rooms[0].xPos) || (corridors[i].startXPos + 1 + roomWidth.m_Max > rooms[0].xPos + roomWidth.m_Max)));
+							break;
+						case Direction.East:
+							corridorFeasible = ((rooms[i].xPos + rooms[i].roomWidth + corridorLength.m_Max + roomWidth.m_Max < rooms[0].xPos) || rooms[0].xPos + rooms[0].roomWidth > rooms[i].xPos || ((corridors[i].startYPos - roomHeight.m_Max > rooms[0].yPos) || (corridors[i].startYPos + 1 + roomHeight.m_Max > rooms[0].yPos + roomHeight.m_Max)));
+							break;
+						case Direction.West:
+							corridorFeasible = ((rooms[i].xPos - corridorLength.m_Max - roomWidth.m_Max < rooms[0].xPos + rooms[0].roomWidth) || rooms[0].xPos + rooms[0].roomWidth < rooms[i].xPos || ((corridors[i].startYPos - roomHeight.m_Max > rooms[0].yPos) || (corridors[i].startYPos + 1 + roomHeight.m_Max > rooms[0].yPos + roomHeight.m_Max)));
+							break;
+					}
+				}
+				while(!corridorFeasible);
             }
 
-            if (i == (int)(rooms.Length * .5f))
-            {
-                Vector3 playerPos = new Vector3(rooms[i].xPos, rooms[i].yPos, 0);
-                GameObject go = Instantiate(player, playerPos, Quaternion.identity) as GameObject;
-                go.name = "player";
-
-                if (go == null) Debug.Log("Null");
-                //assign player to camera
-                camcon.assignPlayer(go);
-            }
+				// Spawn mobs in said room
+				mobcon.SpawnMob(0, rooms[i].xPos + 1, rooms[i].yPos + 1);
+				mobcon.SpawnMob(0, rooms[i].xPos + rooms[i].roomWidth - 2, rooms[i].yPos);
+				mobcon.SpawnMob(0, rooms[i].xPos, rooms[i].yPos + rooms[i].roomHeight - 2);
+			
         }
 
     }

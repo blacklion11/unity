@@ -73,4 +73,8 @@ public class Room
                 break;
         }
     }
+	
+	public bool intersects(Room room){
+		return ((room.yPos < (this.yPos + this.roomHeight) || (room.yPos + room.roomHeight) > (this.yPos))  && ((room.xPos  < this.xPos + this.roomWidth) || room.xPos + room.roomWidth > this.xPos));
+	}
 }

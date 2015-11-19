@@ -43,6 +43,7 @@ public class Corridor
 
     public void SetupCorridor(Room room, IntRange length, IntRange roomWidth, IntRange roomHeight, int columns, int rows, bool firstCorridor)
     {
+	
         // Set a random direction (a random index from 0 to 3, cast to Direction).
         direction = (Direction)Random.Range(0, 4);
 
@@ -63,8 +64,9 @@ public class Corridor
             directionInt++;
             directionInt = directionInt % 4;
             direction = (Direction)directionInt;
-
+	 
         }
+		
 
         // Set a random length.
         corridorLength = length.Random;
