@@ -4,47 +4,77 @@ using System.Collections;
 public class PlayerController : MonoBehaviour {
 
 
-	public float move_speed;
-	public float jump_force;
+	public float moveSpeed;
+	public float jumpSpeed;
+	public Transform groundCheck;
+	public float groundCheckRadius;
+	public LayerMask whatIsGround;
+	
+	private Rigidbody2D rigidbody;
+	private Transform transform;
+	private bool grounded;
+	private int jumpCount;
+	private int maxJumps;
+	private bool jumpReleased;
+	
 
 
 	// Use this for initialization
 	void Start () {
 
 		// Stop the player from "tipping" off the edge
-		Rigidbody2D rb = GetComponent<Rigidbody2D>();
-		rb.freezeRotation = true;
+		rigidbody = GetComponent<Rigidbody2D>();
+		rigidbody.freezeRotation = true;
+	
+		// get player transform 
+		transform = GetComponent<Transform>();
 
-
+		//set default max jumps to 2
+		maxJumps = 2;
+		
+		jumpReleased = false;
 	}
 	
 	// Update is called once per frame
 	void Update () {
 
-		//GetComponent<Transform>().Rotate(Vector3.back * 5);
+		
 
 	}
 
 	void FixedUpdate()
 	{
-		//Get player transform
-		Transform t = GetComponent<Transform>();
-
-		//Get player rigidbody
-		Rigidbody2D rb = GetComponent<Rigidbody2D>();
-
+	
+		grounded = Physics2D.OverlapCircle(groundCheck.position, groundCheckRadius, whatIsGround);
+		if(grounded)
+		{		
+			jumpCount = 0;
+			rigidbody.velocity = new Vector2(rigidbody.velocity.x, 0);
+		}
+		
 		// Check for movement keys down
 		if(Input.GetKey("a"))
 		{
-			t.position = new Vector2(t.position.x - move_speed, t.position.y);
+			rigidbody.velocity = new Vector2(-moveSpeed, rigidbody.velocity.y);
+			transform.localScale = new Vector3(-1,1,1);
 		}
 		if(Input.GetKey("d"))
 		{
-			t.position = new Vector2(t.position.x + move_speed, t.position.y);
+			rigidbody.velocity = new Vector2(moveSpeed, rigidbody.velocity.y);
+			transform.localScale = new Vector3(1, 1,1);
 		}
-		if(Input.GetKey("space"))
+		
+		if(Input.GetKeyDown("space"))
 		{
-			rb.AddForce(new Vector2(0, jump_force));
+			if(grounded || jumpCount < maxJumps)
+			{
+				rigidbody.velocity = new Vector2(rigidbody.velocity.x, jumpSpeed);
+			}
+		}
+		else if (Input.GetKeyUp("space"))
+		{
+			// we have released the space bar after jumping
+			jumpCount++;
 		}
 	}
 }
