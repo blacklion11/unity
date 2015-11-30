@@ -11,7 +11,9 @@ public class GameManager : MonoBehaviour {
 		GameObject spawnPoint = GameObject.FindGameObjectWithTag ("player_spawn");
 		GameObject player = Instantiate (player_prefab, spawnPoint.transform.position, Quaternion.identity) as GameObject;
 
-		Camera.main.transform.SetParent (player.transform);
+		GameObject camera = GameObject.FindGameObjectWithTag("MainCamera");
+		camera.transform.SetParent (player.transform);
+		camera.transform.localPosition = new Vector3 (0, 0, -10);
 	}
 	
 	void Update () 
