@@ -9,6 +9,7 @@ public class PlayerController : MonoBehaviour {
 	public Transform groundCheck;
 	public float groundCheckRadius;
 	public LayerMask whatIsGround;
+	public Animator	animator;
 	
 	private Rigidbody2D rigidbody;
 	private Transform transform;
@@ -57,11 +58,13 @@ public class PlayerController : MonoBehaviour {
 		{
 			rigidbody.velocity = new Vector2(-moveSpeed, rigidbody.velocity.y);
 			transform.localScale = new Vector3(-1,1,1);
+			animator.SetBool("walking", true);
 		}
 		if(Input.GetKey("d"))
 		{
 			rigidbody.velocity = new Vector2(moveSpeed, rigidbody.velocity.y);
 			transform.localScale = new Vector3(1, 1,1);
+			animator.SetBool("walking", true);
 		}
 		
 		if(Input.GetKeyDown("space"))
@@ -76,5 +79,8 @@ public class PlayerController : MonoBehaviour {
 			// we have released the space bar after jumping
 			jumpCount++;
 		}
+
+		// check if velocity is zero so we can stop walking
+		if(Mathf.Abs(rigidbody.velocity.x) < 0.4f) animator.SetBool("walking", false);
 	}
 }
