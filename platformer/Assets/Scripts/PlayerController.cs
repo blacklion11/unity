@@ -53,46 +53,49 @@ public class PlayerController : MonoBehaviour {
 	{
 		if (!stunned) {
 			grounded = Physics2D.OverlapCircle (groundCheck.position, groundCheckRadius, whatIsGround);
+			animator.SetBool("grounded", grounded);
+
 			if (grounded) {		
 				jumpCount = 0;
 				//rigidbody.velocity = new Vector2(rigidbody.velocity.x, 0);
 			}
 		
 			// Check for movement keys down
-			if (Input.GetKey ("a")) {
+			if (Input.GetKey (KeyCode.A)) {
 				rigidbody.velocity = new Vector2 (-moveSpeed, rigidbody.velocity.y);
 				transform.localScale = new Vector3 (-1, 1, 1);
 				animator.SetBool ("walking", true);
 			}
-			if (Input.GetKey ("d")) {
+			if (Input.GetKey (KeyCode.D)) {
 				rigidbody.velocity = new Vector2 (moveSpeed, rigidbody.velocity.y);
 				transform.localScale = new Vector3 (1, 1, 1);
 				animator.SetBool ("walking", true);
 			}
 		
-			if (Input.GetKeyDown ("space")) {
+			if (Input.GetKeyDown (KeyCode.Space)) {
 				if (grounded || jumpCount < maxJumps) {
 					rigidbody.velocity = new Vector2 (rigidbody.velocity.x, jumpSpeed);
 				}
-			} else if (Input.GetKeyUp ("space")) {
+			} else if (Input.GetKeyUp (KeyCode.Space)) {
 				// we have released the space bar after jumping
 				jumpCount++;
 			}
-			if(Input.GetKeyDown("enter"))
+			if(Input.GetKeyDown(KeyCode.Return))
 			{
 				if(transform.localScale == new Vector3(1,1,1))
 				{
+					//Debug.Log("Facing Right");
 					// facing right
-					GameObject fireball = Instantiate(fireballPrefab, new Vector2(this.transform.position.x + 1, this.transform.position.y), Quaternion.identity) as GameObject;
-					fireball.GetComponent<FireballController>().Launch(false, 3);
+					GameObject fireball = Instantiate(fireballPrefab, new Vector2(this.transform.position.x + .5f, this.transform.position.y), Quaternion.identity) as GameObject;
+					fireball.GetComponent<FireballController>().Launch(false, fireballSpeed);
 					//fireball.GetComponent<Rigidbody2D>().velocity = new Vector2(fireballSpeed, 0);
 					//fireball.transform.localScale = this.transform.localScale;
 				}
 				else
 				{
 					// facing left
-					GameObject fireball = Instantiate(fireballPrefab, new Vector2(this.transform.position.x - 1, this.transform.position.y), Quaternion.identity) as GameObject;
-					fireball.GetComponent<FireballController>().Launch(true, 3);
+					GameObject fireball = Instantiate(fireballPrefab, new Vector2(this.transform.position.x - .5f, this.transform.position.y), Quaternion.identity) as GameObject;
+					fireball.GetComponent<FireballController>().Launch(true, fireballSpeed);
 					//fireball.GetComponent<Rigidbody2D>().velocity = new Vector2(-fireballSpeed, 0);
 					//fireball.transform.localScale = this.transform.localScale;
 				}
@@ -117,6 +120,14 @@ public class PlayerController : MonoBehaviour {
 				stunned = false;
 			}
 
+		}
+	}
+
+	void OnCollisionEnter2D(Collision2D collision)
+	{
+		if(collision.collider.tag.Contains("enemy"))
+		{
+			GetComponent<HealthController>().Hit(collision.collider.GetComponent<DamageController>().GetDamage());
 		}
 	}
 

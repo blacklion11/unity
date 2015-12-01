@@ -8,7 +8,6 @@ public class ZombieController : MonoBehaviour {
 	public GameObject wallTest;
 	public WallTestScript wts;
 	public float knockBackForce;
-	public int health;
 
 
 	private Rigidbody2D rigidbody;
@@ -24,10 +23,6 @@ public class ZombieController : MonoBehaviour {
 	// Update is called once per frame
 	void Update () 
 	{
-		if (health <= 0)
-		{
-			Die();
-		}
 	}
 
 	void FixedUpdate()
@@ -64,22 +59,14 @@ public class ZombieController : MonoBehaviour {
 				collision.gameObject.GetComponent<PlayerController>().Stun(10);
 				collision.rigidbody.velocity = new Vector2(-knockBackForce, collision.rigidbody.velocity.y);
 			}
-			// we got hit by the players fireball attack
-			else if(collision.gameObject.name.Contains("fireball"))
-			{
-				health -= 1;
-			}
 			else
 			{
 				collision.gameObject.GetComponent<PlayerController>().Stun(10);
 				collision.rigidbody.velocity = new Vector2(knockBackForce, collision.rigidbody.velocity.y);
 			}
+
+			collision.gameObject.GetComponent<HealthController>().Hit(GetComponent<DamageController>().GetDamage());
 		}
 
-	}
-
-	public void Die()
-	{
-		Destroy (this.gameObject);
 	}
 }
