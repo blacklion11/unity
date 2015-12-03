@@ -13,6 +13,11 @@ public class ZombieController : MonoBehaviour {
 			Debug.Log("Looking for player");
 			player =  GameObject.Find("player");
 		}
+		if(Vector3.Distance(this.transform.position, player.transform.position) <= agroRange)
+		{
+			Destroy(this.gameObject);
+		}
+		
 		rb = GetComponent<Rigidbody2D>();
 		zombieTimer = -1;
 	}
@@ -44,7 +49,6 @@ public class ZombieController : MonoBehaviour {
 	
 	private void Move(Vector3 pos, float speed)
 	{
-		
 		transform.position= Vector3.MoveTowards(transform.position, pos, speed);
 	}
 }

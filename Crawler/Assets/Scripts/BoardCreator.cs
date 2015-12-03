@@ -20,16 +20,19 @@ public class BoardCreator : MonoBehaviour
     public GameObject[] wallTiles;                            // An array of wall tile prefabs.
     public GameObject[] outerWallTiles;                       // An array of outer wall tile prefabs.
     public GameObject player;
+	public GameObject exit;
 
     private TileType[][] tiles;                               // A jagged array of tile types representing the board, like a grid.
     private Room[] rooms;                                     // All the rooms that are created for this board.
     private Corridor[] corridors;                             // All the corridors that connect the rooms.
     private GameObject boardHolder;                           // GameObject that acts as a container for all other tiles.
+	private int exitRoom;
+	
 
     public CameraController camcon;
 	public MobController mobcon;
 
-    private void Start()
+    public void CreateBoard()
     {
         // Create the board holder.
         boardHolder = new GameObject("BoardHolder");
@@ -87,6 +90,8 @@ public class BoardCreator : MonoBehaviour
 		//assign player to camera
 		camcon.assignPlayer(go);
 		
+		exitRoom = 0;
+		
         for (int i = 1; i < rooms.Length; i++)
         {
 		
@@ -136,10 +141,18 @@ public class BoardCreator : MonoBehaviour
 				mobcon.SpawnMob(0, rooms[i].xPos + rooms[i].roomWidth - 2, rooms[i].yPos);
 				mobcon.SpawnMob(0, rooms[i].xPos, rooms[i].yPos + rooms[i].roomHeight - 2);
 			
+				if(Vector3.Distance(new Vector3(rooms[i].xPos,rooms[i].yPos,0),new Vector3(rooms[0].xPos,rooms[0].yPos,0)) > Vector3.Distance(new Vector3(rooms[exitRoom].xPos,rooms[exitRoom].yPos,0),new Vector3(rooms[0].xPos,rooms[0].yPos,0)) ){
+					exitRoom = i;
+				}
         }
-
+		SpawnExit();
     }
-
+	
+	void SpawnExit(){
+		Vector3 exitLocation = new Vector3(rooms[exitRoom].xPos+rooms[exitRoom].roomWidth/2,rooms[exitRoom].yPos+rooms[exitRoom].roomHeight/2,0);
+		GameObject temp = Instantiate(exit) as GameObject;
+		temp.transform.position = exitLocation;
+	}
 
     void SetTilesValuesForRooms()
     {
