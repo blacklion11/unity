@@ -7,14 +7,19 @@ public class PlayerController : NetworkBehaviour {
 
 	public int health;
 	
+	[SyncVar]
+	public bool facingRight;
+	
 	public float walkSpeed;
 	public float runSpeed;
 	public float jumpSpeed;
+
 
 	private Rigidbody2D rb;
 	private Transform transform;
 	private Vector3 faceRight;
 	private Vector3 faceLeft;
+	
 
 	void Start () 
 	{
@@ -27,17 +32,30 @@ public class PlayerController : NetworkBehaviour {
 	
 	void Update () 
 	{
-		if(!isLocalPlayer) return;
+		//Debug.Log("Facing Right = " + facingRight);
+	
+		if(!isLocalPlayer)
+		{
+			// set which way the character is facing
+			if(facingRight)
+				transform.localScale = faceRight;
+			else
+				transform.localScale = faceLeft;
+		
+			return;
+		}
 		
 		// get input from player
 		if (Input.GetButton("Positive Move"))
 		{
-			transform.localScale = faceRight;
+			if(!facingRight) CmdFlip(true);
+			
 			rb.velocity = new Vector2(walkSpeed, rb.velocity.y);
 		}
 		else if(Input.GetButton("Negative Move"))
 		{
-			transform.localScale = faceLeft;
+			if(facingRight) CmdFlip(false);
+			
 			rb.velocity = new Vector2(-walkSpeed, rb.velocity.y);
 		}
 		else
@@ -50,11 +68,52 @@ public class PlayerController : NetworkBehaviour {
 			rb.velocity = new Vector2(rb.velocity.x, jumpSpeed);
 		}
 		
+		// set which way the character is facing
+		if(facingRight)
+			transform.localScale = faceRight;
+		else
+			transform.localScale = faceLeft;
+		
 	}
 	
 	void FixedUpdate()
 	{
 		if(!isLocalPlayer) return;
 	}
-	
+
+	[Command]
+	public void CmdFlip(bool facingRight)
+	{
+		this.facingRight = facingRight;
+	}
 }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
