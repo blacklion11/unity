@@ -3,10 +3,14 @@ using System.Collections;
 
 public class ZombieController : MonoBehaviour {
 	private GameObject player;
-	private Rigidbody2D rb;
+	public Rigidbody2D rb;
 	public float agroRange;
 	public float zombieWanderTime;
 	private float zombieTimer;
+	public float speed;
+	public int health;
+	public float deathDelay=0;
+	
 	// Use this for initialization
 	void Start () {
 		while(player==null){
@@ -20,6 +24,7 @@ public class ZombieController : MonoBehaviour {
 		
 		rb = GetComponent<Rigidbody2D>();
 		zombieTimer = -1;
+		speed = 2;
 	}
 	
 	// Update is called once per frame
@@ -28,7 +33,7 @@ public class ZombieController : MonoBehaviour {
 		
 		Vector3 playerTransform = new Vector3(player.transform.position.x,player.transform.position.y,0);
 		if(Vector3.Distance(playerTransform, this.transform.position) < agroRange){
-			Move(playerTransform,2 * Time.deltaTime);
+			Move(playerTransform, speed * Time.deltaTime);
 			zombieTimer = -1;
 		}else if(zombieTimer < 0){
 			zombieTimer = zombieWanderTime;
@@ -40,11 +45,26 @@ public class ZombieController : MonoBehaviour {
 			Vector2 force = new Vector2(100*Random.Range(-1f,1f),100*Random.Range(-1f,1f));
 			//Debug.Log(force);
 			rb.AddForce(force);
-			
 		}else{
 			zombieTimer -= Time.deltaTime;
 		}
 		
+	}
+
+	
+	public void Damage(int damage)
+	{
+		Debug.Log(health);
+		health -= damage;
+		if(health <= 0)
+		{
+			StartCoroutine("die");
+		}
+	}
+	
+	IEnumerator die(){
+		yield return new WaitForSeconds(deathDelay);
+		Destroy(this.gameObject);
 	}
 	
 	private void Move(Vector3 pos, float speed)

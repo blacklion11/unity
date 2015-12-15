@@ -13,7 +13,10 @@ public class CameraController : MonoBehaviour {
 
 	// Use this for initialization
 	void Start () {
-        this.player = GameObject.FindWithTag("Player");
+		while(player==null){
+			this.player = GameObject.FindWithTag("Player");
+			Debug.Log("looking for player");
+		}
         camera = GetComponent<Camera>();
 	}
 
@@ -31,6 +34,6 @@ public class CameraController : MonoBehaviour {
 			text.transform.localPosition = new Vector3(Screen.width * .45f,Screen.height * .45f,0);
 			heart.transform.position = new Vector3(text.transform.position.x + 0.3f, text.transform.position.y+0.4f);
         }
-		text.text = player.GetComponent<PlayerController> ().health + "";
+		text.text = player.GetComponent<PlayerController> ().health+ "";
 	}
 }

@@ -4,6 +4,7 @@ using System.Collections;
 public class BulletController : MonoBehaviour {
 	Rigidbody2D rb;
 	public float speed;
+	public int damage;
 	// Use this for initialization
 	void Start () {
 		rb = GetComponent<Rigidbody2D>();
@@ -22,7 +23,8 @@ public class BulletController : MonoBehaviour {
 	void OnTriggerEnter2D(Collider2D collider){
 	
 		if(collider.gameObject.name.Contains("zombie")){
-			Destroy(collider.gameObject);
+			ZombieController zc = collider.GetComponent<ZombieController>();
+			zc.Damage(damage);
 			Destroy(this.gameObject);
 		}else if(!collider.gameObject.name.Contains("player")){
 			Destroy(this.gameObject);
