@@ -27,6 +27,9 @@ public class CameraController : MonoBehaviour {
 
 	// Update is called once per frame
 	void Update () {
+		if(Input.GetButtonDown("Cancel")){
+			Application.LoadLevel("title");
+		}
         if (player != null)
         {
             this.transform.position = new Vector3(player.transform.position.x, player.transform.position.y, -10);
@@ -34,6 +37,6 @@ public class CameraController : MonoBehaviour {
 			text.transform.localPosition = new Vector3(Screen.width * .45f,Screen.height * .45f,0);
 			heart.transform.position = new Vector3(text.transform.position.x + 0.3f, text.transform.position.y+0.4f);
         }
-		text.text = player.GetComponent<PlayerController> ().health+ "";
+		text.text = player.GetComponent<PlayerController>().curBullets + "/" + player.GetComponent<PlayerController>().getMaxBullets()+ "   " + player.GetComponent<PlayerController>().health+ "";
 	}
 }

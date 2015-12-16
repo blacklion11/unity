@@ -3,7 +3,7 @@ using System.Collections;
 
 public class BossController : MonoBehaviour {
 
-
+	static int bossLevel=1;
 	public float chargeTime;
 	public float chargeTimer;
 	public float spawnTime;
@@ -20,7 +20,7 @@ public class BossController : MonoBehaviour {
 		spawnTime = 3;
 		zc = GetComponent<ZombieController>();
 		zc.speed = 4;
-		zc.health = 50;
+		zc.health = 25+25*bossLevel;
 		zc.deathDelay = 1;
 	}
 	
@@ -38,6 +38,7 @@ public class BossController : MonoBehaviour {
 		chargeTime -= Time.deltaTime;
 		if(zc.health==0){
 			Debug.Log("BOSS DOWN");
+			bossLevel++;
 			Application.LoadLevel("level");
 		}
 		/*
@@ -51,7 +52,11 @@ public class BossController : MonoBehaviour {
 		spawnTime -= Time.deltaTime;
 		*/
 	}
-	
+
+	public void resetBoss(){
+		bossLevel = 1;
+	}
+
 	IEnumerator Charge()
 	{
 		Debug.Log("Charge");
@@ -72,6 +77,7 @@ public class BossController : MonoBehaviour {
 		for(int i = 0; i < numMinions; i++)
 		{
 			GameObject go = Instantiate(zombiePrefab, this.transform.position, Quaternion.identity) as GameObject;
+			go.GetComponent<ZombieController>().health = bossLevel;
 			go.GetComponent<ZombieController>().speed = 5;
 			go.GetComponent<ZombieController>().agroRange = 0;
 			yield return new WaitForSeconds(0.5f);

@@ -1,5 +1,6 @@
 ﻿using UnityEngine;
 using System.Collections;
+using System;
 
 public class ZombieController : MonoBehaviour {
 	private GameObject player;
@@ -10,6 +11,8 @@ public class ZombieController : MonoBehaviour {
 	public float speed;
 	public int health;
 	public float deathDelay=0;
+	public AudioClip death;
+	public AudioSource audio;
 	
 	// Use this for initialization
 	void Start () {
@@ -17,6 +20,14 @@ public class ZombieController : MonoBehaviour {
 			Debug.Log("Looking for player");
 			player =  GameObject.Find("player");
 		}
+		GameObject go;
+		GameController gc;
+		try{
+			go =  GameObject.Find("GameController");
+			gc = go.GetComponent<GameController>();
+			health = (int)Math.Ceiling(gc.getLevel()/5.0);
+		} catch (Exception e){}
+		audio = GetComponent<AudioSource> ();
 		if(Vector3.Distance(this.transform.position, player.transform.position) <= agroRange)
 		{
 			Destroy(this.gameObject);
@@ -42,7 +53,7 @@ public class ZombieController : MonoBehaviour {
 			Vector3 lookdir = new Vector3(0,0,0);
 			transform.rotation = Quaternion.LookRotation(lookdir);*/
 			rb.velocity = new Vector2(0,0);
-			Vector2 force = new Vector2(100*Random.Range(-1f,1f),100*Random.Range(-1f,1f));
+			Vector2 force = new Vector2(100*UnityEngine.Random.Range(-1f,1f),100*UnityEngine.Random.Range(-1f,1f));
 			//Debug.Log(force);
 			rb.AddForce(force);
 		}else{
@@ -63,6 +74,7 @@ public class ZombieController : MonoBehaviour {
 	}
 	
 	IEnumerator die(){
+		audio.PlayOneShot (death);
 		yield return new WaitForSeconds(deathDelay);
 		Destroy(this.gameObject);
 	}
