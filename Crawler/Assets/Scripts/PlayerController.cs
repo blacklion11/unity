@@ -31,9 +31,9 @@ public class PlayerController : MonoBehaviour {
 		try{
 			go =  GameObject.Find("GameController");
 			gc = go.GetComponent<GameController>();
-			text = GameObject.Find("level").GetComponent<Text>();
-			StartCoroutine("displayLevel");
 		} catch (Exception e){}
+		text = GameObject.Find("level").GetComponent<Text>();
+		StartCoroutine("displayLevel");
         rb = this.GetComponent<Rigidbody2D>();
         rb.freezeRotation = true;
 		health = maxHealth;
